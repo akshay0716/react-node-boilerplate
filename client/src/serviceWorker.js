@@ -52,6 +52,23 @@ export function register(config) {
   }
 }
 
+/**
+* Registers a service worker to enable offline support.
+* @example
+* registerValidSW('/service-worker.js', {
+*   onUpdate: (registration) => console.log('Service worker updated', registration),
+*   onSuccess: (registration) => console.log('Service worker registration successful', registration)
+* })
+* // No explicit return value; callbacks are invoked on update or success.
+* @param {string} swUrl - The URL where the service worker is available.
+* @param {Object} config - Configuration object with optional callbacks `onUpdate` and `onSuccess`.
+* @returns {void} This function does not have a return value; it registers callbacks instead.
+* @description
+*   - This function is typically called once during the initial load of the client application to handle registration of a service worker.
+*   - `onUpdate` callback is called when there is a new version of the service worker available.
+*   - `onSuccess` callback is called when the service worker is successfully registered and there is no new content yet.
+*   - Error during service worker registration are logged to the console.
+*/
 function registerValidSW(swUrl, config) {
   navigator.serviceWorker
     .register(swUrl)
