@@ -85,34 +85,35 @@ function registerValidSW(swUrl, config) {
           }
         };
       };
+      return registration;
     })
     .catch(error => {
       console.error('Error during service worker registration:', error);
     });
 }
+}
 
 function checkValidServiceWorker(swUrl, config) {
   // Check if the service worker can be found. If it can't reload the page.
-  fetch(swUrl)
-    .then(response => {
-      // Ensure service worker exists, and that we really are getting a JS file.
-      if (
-        response.status === 404 ||
-        response.headers.get('content-type').indexOf('javascript') === -1
-      ) {
-        // No service worker found. Probably a different app. Reload the page.
-        navigator.serviceWorker.ready.then(registration => {
-          registration.unregister().then(() => {
-            window.location.reload();
-          });
+fetch(swUrl)
+  .then(response => {
+    if (
+      response.status === 404 ||
+      response.headers.get('content-type').indexOf('javascript') === -1
+    ) {
+      return navigator.serviceWorker.ready.then(registration => {
+        return registration.unregister().then(() => {
+          window.location.reload();
+          return null;
         });
-      } else {
-        // Service worker found. Proceed as normal.
-        registerValidSW(swUrl, config);
-      }
-    })
-    .catch(() => {
-      console.log(
+      });
+    } else {
+      registerValidSW(swUrl, config);
+      return null;
+    }
+  })
+  .catch(() => {
+    console.log(
         'No internet connection found. App is running in offline mode.'
       );
     });
@@ -121,7 +122,7 @@ function checkValidServiceWorker(swUrl, config) {
 export function unregister() {
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.ready.then(registration => {
-      registration.unregister();
+      return registration.unregister();
     });
   }
 }
